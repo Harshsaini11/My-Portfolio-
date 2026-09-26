@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+        content="Professional portfolio of a B.Tech CSE Student and Full Stack Developer skilled in Web Development, Python, AI/ML and Software Development.">
+    <meta name="keywords"
+        content="Developer Portfolio, Full Stack Developer, Python Developer, AI ML Developer, Web Developer">
+    <meta name="author" content="Harsh Kumar Saini">
+
+    <title>Harsh Kumar Saini | Full Stack Developer Portfolio</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body class="{% if is_admin %}admin-mode{% endif %}">
+
+{% if is_admin %}
+<!-- Floating Admin Controls -->
+<div class="admin-floating-bar">
+    <span class="admin-status"><i class="fa-solid fa-pen-to-square"></i> Live Edit Mode Active</span>
+    <button id="save-all-btn" class="btn primary btn-admin-save">
+        <i class="fa-solid fa-floppy-disk"></i> Save All Changes
+    </button>
+    <button onclick="openChangePasswordModal()" class="btn secondary btn-admin-save" style="border-color: #38BDF8; color: #38BDF8;">
+        <i class="fa-solid fa-key"></i> Change Password
+    </button>
+    <button id="logout-admin-btn" class="btn secondary btn-admin-logout">
+        Logout
+    </button>
+</div>
+{% endif %}
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <nav class="navbar">
+        <a href="#" class="logo">
+            <span>&lt;</span>Welcome<span>/&gt;</span>
+        </a>
+
+        <ul class="nav-links">
+            <li><a href="#home" class="active">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#internships">Internships</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#contact">Contact</a></li>
+            {% if not is_admin %}
+            <li><a href="/admin" target="_blank" class="nav-admin-link"><i class="fa-solid fa-lock"></i> Admin</a></li>
+            {% endif %}
+        </ul>
+
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Mobile Menu -->
+        <div class="menu-btn">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+    </nav>
+</header>
+
+<!-- ================= HERO SECTION ================= -->
+<section class="hero" id="home">
+    <div class="hero-content">
+        <h1>
+            Hello, I'm
+            <span data-cms="hero_name">Harsh Kumar Saini</span>
+        </h1>
+
+        <h2>
+            I'm a <span data-cms="hero_role" class="typing">Full Stack Developer</span>
+        </h2>
+
+        <p data-cms="hero_description">
+            A passionate B.Tech Computer Science student and Full Stack Developer
+            who loves building modern websites, AI applications, and innovative
+            software solutions.
+        </p>
+
+        <!-- Hero Buttons -->
+        <div class="hero-buttons">
+            <div class="resume-btn-group">
+                <!-- Main Combined Button (View Resume + Direct Download Icon) -->
+                <div class="btn primary btn-combined-resume">
+                    <a id="resume-view-btn" href="/static/assets/resume.pdf" target="_blank" rel="noopener noreferrer" class="resume-main-action">
+                        <i class="fa-solid fa-eye"></i> <span data-cms="resume_btn_text">View Resume</span>
+                    </a>
+                    <span class="btn-divider">|</span>
+                    <a id="resume-download-btn" href="/static/assets/resume.pdf" download="Harsh_Kumar_Saini_Resume.pdf" class="resume-icon-action" title="Download Resume">
+                        <i class="fa-solid fa-download"></i>
+                    </a>
+                </div>
+
+                {% if is_admin %}
+                <button type="button" class="btn-edit-resume" onclick="openResumeModal()" title="Edit Resume File/Link">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                {% endif %}
+            </div>
+            
+            <!-- Second Main Button -->
+            <a href="#contact" class="btn secondary">
+                <i class="fa-solid fa-paper-plane"></i> Contact Me
+            </a>
+        </div>
+    </div>
+    
+    <!-- Hero Image Area -->
+    <div class="hero-image">
+        <div class="image-box" id="hero-image-container">
+            <img id="profile-img-preview" src="{{ profile_img if profile_img else url_for('static', filename='assets/profile.jpg') }}" alt="Profile Image" data-cms="hero_profile_img">
+            {% if is_admin %}
+            <button type="button" class="btn-edit-avatar" onclick="openHeroImgModal()">
+                <i class="fa-solid fa-camera"></i> Change Photo
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- ================= ABOUT SECTION ================= -->
+<section class="about section" id="about">
+    <h2 class="section-title">
+        About <span data-cms="about_title_accent">Me</span>
+    </h2>
+
+    <div class="about-container">
+        <div class="about-text">
+            <h3 data-cms="about_subtitle">
+                B.Tech CSE Student | Full Stack Developer
+            </h3>
+
+            <p data-cms="about_p1">
+                I am a Computer Science Engineering student passionate about
+                technology, programming, and software development.
+                My goal is to create scalable applications and solve real-world
+                problems using modern technologies.
+            </p>
+
+            <p data-cms="about_p2">
+                I have experience working with Web Development, Python,
+                Artificial Intelligence, Machine Learning, and Backend Development.
+            </p>
+        </div>
+
+        <div class="education-card glass-card">
+            <h3 data-cms="edu_heading">Education</h3>
+
+            <div class="education-item">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <div>
+                    <h4 data-cms="edu_deg">Bachelor of Technology (CSE)</h4>
+                    <p data-cms="edu_field">Computer Science Engineering</p>
+                </div>
+            </div>
+
+            <div class="education-item">
+                <i class="fa-solid fa-code"></i>
+                <div>
+                    <h4 data-cms="edu_goal_title">Career Goal</h4>
+                    <p data-cms="edu_goal_desc">Become a Professional Software Developer</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats">
+        <div class="stat-card">
+            <h2 data-count="10" data-cms="stat_projects_num">10</h2>
+            <p data-cms="stat_projects_label">Projects Completed</p>
+        </div>
+
+        <div class="stat-card">
+            <h2 data-count="8" data-cms="stat_skills_num">8</h2>
+            <p data-cms="stat_skills_label">Programming Skills</p>
+        </div>
+
+        <div class="stat-card">
+            <h2 data-count="2" data-cms="stat_exp_num">2</h2>
+            <p data-cms="stat_exp_label">Internship Experience</p>
+        </div>
+
+        <div class="stat-card">
+            <h2 data-count="100" data-cms="stat_learning_num">100</h2>
+            <p data-cms="stat_learning_label">Learning %</p>
+        </div>
+    </div>
+</section>
+
+<!-- ================= SKILLS SECTION ================= -->
+<section class="skills section" id="skills">
+    <h2 class="section-title">
+        My <span>Skills</span>
+    </h2>
+
+    <div class="skills-container" id="skills-wrapper">
+        <div class="skill-card"><h3 data-cms="sk_html">HTML5</h3><div class="progress"><span class="progress-90"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_css">CSS3</h3><div class="progress"><span class="progress-90"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_js">JavaScript</h3><div class="progress"><span class="progress-85"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_py">Python</h3><div class="progress"><span class="progress-90"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_java">Java</h3><div class="progress"><span class="progress-80"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_cpp">C++</h3><div class="progress"><span class="progress-85"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_flask">Flask</h3><div class="progress"><span class="progress-85"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_react">React</h3><div class="progress"><span class="progress-75"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_sql">SQL</h3><div class="progress"><span class="progress-80"></span></div></div>
+        <div class="skill-card"><h3 data-cms="sk_git">Git & GitHub</h3><div class="progress"><span class="progress-90"></span></div></div>
+    </div>
+</section>
+
+<!-- ================= INTERNSHIP SECTION ================= -->
+<section class="internships section" id="internships">
+    <h2 class="section-title">
+        My <span>Internships</span>
+    </h2>
+
+    <div class="project-container" id="internships-wrapper">
+        <!-- JS automatically loads cards here -->
+    </div>
+</section>
+
+<!-- ================= PROJECT SECTION ================= -->
+<section class="projects section" id="projects">
+    <h2 class="section-title">
+        My <span>Projects</span>
+    </h2>
+
+    <div class="project-container" id="projects-wrapper">
+        <!-- JS automatically loads cards here -->
+    </div>
+</section>
+
+<!-- ================= EXPERIENCE SECTION ================= -->
+<section class="experience section" id="experience">
+    <h2 class="section-title">
+        My <span>Experience</span>
+    </h2>
+
+    <div class="experience-container" id="experience-wrapper">
+        <!-- JS automatically loads cards here -->
+    </div>
+</section>
+
+<!-- ================= SERVICES SECTION ================= -->
+<section class="services section" id="services">
+    <h2 class="section-title">
+        My <span>Services</span>
+    </h2>
+
+    <div class="services-container" id="services-wrapper">
+        <!-- JS automatically loads cards here -->
+    </div>
+</section>
+
+<!-- ================= CONTACT SECTION ================= -->
+<section class="contact section" id="contact">
+    <h2 class="section-title">
+        Contact <span>Me</span>
+    </h2>
+
+    <div class="contact-container">
+        <div class="contact-info">
+            <h3 data-cms="cnt_title">Let's Work Together</h3>
+            <p data-cms="cnt_sub">Have a project idea or want to collaborate? Feel free to contact me.</p>
+
+            <div class="contact-item">
+                <i class="fa-solid fa-envelope"></i>
+                <a href="mailto:Harshsaini2452005@gmail.com" data-cms="cnt_email">Harshsaini2452005@gmail.com</a>
+            </div>
+
+            <div class="contact-item">
+                <i class="fa-brands fa-linkedin"></i>
+                <a href="https://www.linkedin.com/in/harsh-saini-317827297" target="_blank" data-cms="cnt_linkedin">LinkedIn</a>
+            </div>
+
+            <div class="contact-item">
+                <i class="fa-brands fa-github"></i>
+                <a href="https://github.com/Harshsaini11" target="_blank" data-cms="cnt_github">GitHub</a>
+            </div>
+
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <form class="contact-form" id="contact-form">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <input type="text" id="subject" placeholder="Subject" required>
+            <textarea id="message" rows="6" placeholder="Your Message" required></textarea>
+            <button type="submit" class="btn primary">Send Message</button>
+        </form>
+    </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <p data-cms="footer_copy">© 2026 Harsh Kumar Saini. All Rights Reserved.</p>
+    <div>
+        <a href="#home">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+    </div>
+</footer>
+
+<!-- ================= BACK TO TOP BUTTON ================= -->
+<button id="back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+</button>
+
+<!-- ================= ADMIN MODALS SECTION ================= -->
+{% if is_admin %}
+<!-- Add / Edit Project Modal -->
+<div id="add-project-modal" class="modal">
+    <div class="modal-content glass-card">
+        <div class="modal-header">
+            <h3 id="modal-heading">Add New Project</h3>
+            <button onclick="closeProjectModal()" class="btn-close">&times;</button>
+        </div>
+        
+        <form id="modal-project-form">
+            <input type="hidden" id="m-id" value="">
+
+            <div class="form-group">
+                <label>Project Title</label>
+                <input type="text" id="m-title" required>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="m-desc" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Tech Stack (Comma separated)</label>
+                <input type="text" id="m-tech" placeholder="Python, Flask, SQLite" required>
+            </div>
+
+            <div class="form-group">
+                <label>Project Image (Upload File OR Paste Link)</label>
+                <input type="file" id="m-file" accept="image/*">
+                
+                <label class="form-sublabel">OR Image Link / Path</label>
+                <input type="text" id="m-img" placeholder="Paste any image URL or path">
+            </div>
+
+            <div class="form-group">
+                <label>GitHub Link</label>
+                <input type="url" id="m-github" required>
+            </div>
+
+            <div class="form-group">
+                <label>Live Demo Link</label>
+                <input type="text" id="m-demo" value="#">
+            </div>
+
+            <button type="submit" id="m-submit-btn" class="btn primary btn-block">Save Project</button>
+        </form>
+    </div>
+</div>
+
+<!-- Add / Edit Internship Modal -->
+<div id="add-internship-modal" class="modal">
+    <div class="modal-content glass-card">
+        <div class="modal-header">
+            <h3 id="intern-modal-heading">Add New Internship</h3>
+            <button onclick="closeInternshipModal()" class="btn-close">&times;</button>
+        </div>
+        
+        <form id="modal-internship-form">
+            <input type="hidden" id="i-id" value="">
+
+            <div class="form-group">
+                <label>Role / Position</label>
+                <input type="text" id="i-role" placeholder="Java Developer Intern" required>
+            </div>
+
+            <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" id="i-company" placeholder="Elevate Labs" required>
+            </div>
+
+            <div class="form-group">
+                <label>Duration / Period</label>
+                <input type="text" id="i-duration" placeholder="Sep 2025 - Present" required>
+            </div>
+
+            <div class="form-group">
+                <label>Description / Responsibilities</label>
+                <textarea id="i-desc" rows="3" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Technologies Used (Comma separated)</label>
+                <input type="text" id="i-tech" placeholder="Java, Core Java, OOPs, MySQL" required>
+            </div>
+
+            <div class="form-group">
+                <label>Internship Certificate (Upload PDF/Image OR Paste Link)</label>
+                <input type="file" id="i-cert-file" accept=".pdf,image/*">
+                <label class="form-sublabel">OR Certificate Link / Path</label>
+                <input type="text" id="i-cert" placeholder="/static/assets/certificate.pdf or https://...">
+            </div>
+
+            <div class="form-group">
+                <label>Offer Letter (Upload PDF/Image OR Paste Link)</label>
+                <input type="file" id="i-offer-file" accept=".pdf,image/*">
+                <label class="form-sublabel">OR Offer Letter Link / Path</label>
+                <input type="text" id="i-offer" placeholder="/static/assets/offer_letter.pdf or https://...">
+            </div>
+
+            <button type="submit" id="i-submit-btn" class="btn primary btn-block">Save Internship</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Resume Modal -->
+<div id="edit-resume-modal" class="modal">
+    <div class="modal-content glass-card">
+        <div class="modal-header">
+            <h3>Update Resume</h3>
+            <button type="button" onclick="closeResumeModal()" class="btn-close">&times;</button>
+        </div>
+        
+        <form id="modal-resume-form">
+            <div class="form-group">
+                <label>Upload New Resume (PDF File)</label>
+                <input type="file" id="resume-file-input" accept=".pdf">
+            </div>
+
+            <div class="form-group">
+                <label class="form-sublabel">OR Universal Link / Drive URL / Relative Path</label>
+                <input type="text" id="resume-url-input" placeholder="https://drive.google.com/... or /static/assets/resume.pdf">
+            </div>
+
+            <button type="submit" id="resume-submit-btn" class="btn primary btn-block">Save Resume</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Profile Photo Modal -->
+<div id="edit-hero-img-modal" class="modal">
+    <div class="modal-content glass-card">
+        <div class="modal-header">
+            <h3>Change Profile Photo</h3>
+            <button type="button" onclick="closeHeroImgModal()" class="btn-close">&times;</button>
+        </div>
+        
+        <form id="modal-hero-img-form">
+            <div class="form-group">
+                <label>Upload New Photo (File)</label>
+                <input type="file" id="hero-img-file" accept="image/*">
+            </div>
+
+            <div class="form-group">
+                <label class="form-sublabel">OR Paste Image Link / Path</label>
+                <input type="text" id="hero-img-url-input" placeholder="/static/assets/profile.jpg or https://...">
+            </div>
+
+            <button type="submit" id="hero-img-submit-btn" class="btn primary btn-block">Update Profile Photo</button>
+        </form>
+    </div>
+</div>
+
+<!-- Add / Edit Experience Modal -->
+<div id="add-experience-modal" class="modal">
+    <div class="modal-content glass-card">
+        <div class="modal-header">
+            <h3 id="exp-modal-heading">Add Experience Card</h3>
+            <button onclick="closeExperienceModal()" class="btn-close">&times;</button>
+        </div>
+        
+        <form id="modal-experience-form">
+            <input type="hidden" id="exp-id" value="">
+
+            <div class="form-group">
+                <label>Card Icon (FontAwesome Class)</label>
+                <input type="text" id="exp-icon" placeholder="fa-briefcase (or fa-certificate, fa-trophy)" required>
+            </div>
+
+            <div class="form-group">
+                <label>Heading / Title</label>
+                <input type="text" id="exp-title" placeholder="Technical Expertise" required>
+            </div>
+
+            <div class="form-group">
+                <label>Subtitle / Sub-heading (Optional)</label>
+                <input type="text" id="exp-subtitle" placeholder="Hands-on experience in :">
+            </div>
+
+            <div class="form-group">
+                <label>Paragraph / Description (Optional)</label>
+                <textarea id="exp-desc" rows="3" placeholder="Paragraph text here..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Bullet Points (Har line par naya point likhein)</label>
+                <textarea id="exp-points" rows="4" placeholder="Python Programming&#10;Web Development&#10;Git & GitHub"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Badge / Tag Text (Optional)</label>
+                <input type="text" id="exp-tag" placeholder="Internship Experience">
+            </div>
+
+            <button type="submit" id="exp-submit-btn" class="btn primary btn-block">Save Card</button>
+        </form>
+    </div>
+</div>
+
+<!-- Add / Edit Service Modal -->
+<div id="add-service-modal" class="modal">
+    <div class="modal-content glass-card">
+        <div class="modal-header">
+            <h3 id="srv-modal-heading">Add New Service</h3>
+            <button onclick="closeServiceModal()" class="btn-close">&times;</button>
+        </div>
+        
+        <form id="modal-service-form">
+            <input type="hidden" id="srv-id" value="">
+
+            <div class="form-group">
+                <label>Service Icon Class (FontAwesome)</label>
+                <input type="text" id="srv-icon" placeholder="fa-code (or fa-laptop-code, fa-brain)" required>
+            </div>
+
+            <div class="form-group">
+                <label>Service Title</label>
+                <input type="text" id="srv-title" placeholder="Web Development" required>
+            </div>
+
+            <div class="form-group">
+                <label>Service Description</label>
+                <textarea id="srv-desc" rows="4" placeholder="Description about this service..." required></textarea>
+            </div>
+
+            <button type="submit" id="srv-submit-btn" class="btn primary btn-block">Save Service</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Update Password Modal with Eye Icons -->
+<div id="update-password-modal" class="modal">
+    <div class="modal-content glass-card">
+        <div class="modal-header">
+            <h3>Update Password</h3>
+            <button type="button" onclick="closeChangePasswordModal()" class="btn-close">&times;</button>
+        </div>
+        
+        <form id="update-password-form">
+            <div class="form-group">
+                <label>Current Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="current-pass" required placeholder="Enter current password">
+                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('current-pass', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>New Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="new-pass" required placeholder="Enter new password">
+                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('new-pass', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn primary btn-block" style="margin-top: 1rem;">Update Password</button>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript Global State -->
+<script>
+    const IS_ADMIN = {{ 'true' if is_admin else 'false' }};
+</script>
+
+<!-- JavaScript Files -->
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <!-- Font Awesome Link for Eye Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body {
+            background-color: #0F172A;
+            color: #F8FAFC;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .login-box {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            max-width: 380px;
+            width: 90%;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .login-box h2 { margin-bottom: 1.5rem; color: #38BDF8; }
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        .form-group label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; color: #94A3B8; }
+        
+        /* Password Field Wrapper for Eye Icon Placement */
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-wrapper input {
+            width: 100%;
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #0F172A;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .toggle-password-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #94A3B8;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toggle-password-btn:hover { color: #38BDF8; }
+
+        .btn-submit {
+            width: 100%; padding: 0.8rem; border: none; border-radius: 8px;
+            background: linear-gradient(135deg, #2563EB, #38BDF8); color: #fff;
+            font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem;
+        }
+        .forgot-link {
+            display: block; margin-top: 1rem; color: #38BDF8; text-decoration: none; font-size: 0.85rem; cursor: pointer;
+        }
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); justify-content: center; align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: #1E293B; padding: 2rem; border-radius: 12px; width: 90%; max-width: 360px; text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h2>Admin Login</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="admin" required style="width:100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); background: #0F172A; color: #fff; box-sizing: border-box;">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('password', this)">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <p id="error-msg" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem;"></p>
+            <button type="submit" class="btn-submit">Enter Live Editor</button>
+            <span class="forgot-link" onclick="openForgotModal()">Forgot Password?</span>
+        </form>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgot-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color:#38BDF8; margin-top:0;">Reset Password</h3>
+            
+            <div id="step-1">
+                <p style="font-size: 0.85rem; color: #94A3B8;">An OTP will be sent to your registered admin email.</p>
+                <button type="button" class="btn-submit" onclick="sendOTP()">Send OTP</button>
+            </div>
+
+            <form id="reset-form" style="display:none; margin-top: 1rem;">
+                <div class="form-group">
+                    <label>Enter 6-Digit OTP</label>
+                    <input type="text" id="otp-input" required maxlength="6" style="width:100%; padding:0.6rem; background:#0F172A; border:1px solid rgba(255,255,255,0.2); color:#fff; border-radius:6px; box-sizing:border-box;">
+                </div>
+                
+                <div class="form-group">
+                    <label>New Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="new-password-input" required placeholder="New Password">
+                        <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('new-password-input', this)">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-submit">Reset Password</button>
+            </form>
+            
+            <p id="reset-msg" style="font-size: 0.85rem; margin-top: 0.5rem;"></p>
+            <button type="button" onclick="closeForgotModal()" style="background:none; border:none; color:#94A3B8; margin-top: 1rem; cursor:pointer; width:100%;">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Login API Call
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value
+                })
+            });
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                const data = await res.json();
+                document.getElementById('error-msg').textContent = data.message || 'Invalid username or password';
+            }
+        });
+
+        // Forgot Modal Controls
+        function openForgotModal() { document.getElementById('forgot-modal').style.display = 'flex'; }
+        function closeForgotModal() { document.getElementById('forgot-modal').style.display = 'none'; }
+
+        async function sendOTP() {
+            const msg = document.getElementById('reset-msg');
+            msg.style.color = '#38BDF8';
+            msg.textContent = 'Sending OTP...';
+            
+            const res = await fetch('/api/admin/forgot-password', { method: 'POST' });
+            const data = await res.json();
+            
+            if(res.ok) {
+                msg.style.color = '#22c55e';
+                msg.textContent = data.message;
+                document.getElementById('step-1').style.display = 'none';
+                document.getElementById('reset-form').style.display = 'block';
+            } else {
+                msg.style.color = '#ef4444';
+                msg.textContent = data.message;
+            }
+        }
+
+        document.getElementById('reset-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const res = await fetch('/api/admin/reset-password', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    otp: document.getElementById('otp-input').value,
+                    new_password: document.getElementById('new-password-input').value
+                })
+            });
+            const data = await res.json();
+            const msg = document.getElementById('reset-msg');
+            
+            if(res.ok) {
+                alert(data.message);
+                closeForgotModal();
+            } else {
+                msg.style.color = '#ef4444';
+                msg.textContent = data.message;
+            }
+        });
+    </script>
+</body>
+</html>
